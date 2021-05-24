@@ -35,4 +35,18 @@ class Role extends Model
     {
         return $this->belongsToMany(Permission::class, 'permission_role', 'role_id', 'permission_id');
     }
+
+    /**
+     * Get all Roles for a User withing a Team
+     * @return App\Models\Role;
+     */
+    public function teamRoles(int $teamId, int $userId)
+    {
+        $this->whereHas('users', function ($query) {
+            $query->where([
+                ['team_id', $teamId],
+                ['user_id', $userId]
+            ]);
+        })->get();
+    }
 }
